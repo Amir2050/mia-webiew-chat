@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MIA - Ask Me Anything</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #101820;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    #chat-box {
+      width: 90%;
+      max-width: 600px;
+      height: 60vh;
+      background: #1e2a38;
+      border-radius: 10px;
+      padding: 10px;
+      overflow-y: auto;
+      margin-bottom: 1em;
+    }
+    .message {
+      margin: 5px 0;
+    }
+    .user {
+      color: #00d8ff;
+    }
+    .assistant {
+      color: #5eff7e;
+    }
+    input[type="text"] {
+      padding: 10px;
+      width: 80%;
+      border: none;
+      border-radius: 5px;
+    }
+    button {
+      padding: 10px 15px;
+      border: none;
+      background: #00d8ff;
+      color: #000;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #00aacc;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧠 MIA - Ask Me Anything</h1>
+  <div id="chat-box"></div>
+  <div>
+    <input type="text" id="user-input" placeholder="Type your question..." />
+    <button onclick="sendMessage()">Ask Mia</button>
+  </div>
+
+  <script>
+    const API_KEY = "You're Api Here"
+
+    function appendMessage(role, text) {
+      const messageDiv = document.createElement("div");
+      messageDiv.className = "message " + role;
+      messageDiv.textContent = (role === 'user' ? "You: " : "Mia: ") + text;
+      chatBox.appendChild(messageDiv);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    async function sendMessage() {
+      const input = document.getElementById("user-input");
+      const userMessage = input.value;
+      if (!userMessage) return;
+
+      appendMessage("user", userMessage);
+      input.value = "";
+
+      const response = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${API_KEY}`
+        },
+        body: JSON.stringify({
+          model: "gpt-3.5-turbo",
+          messages: [
+            { role: "system", content: "You are MIA, a helpful assistant built into the DriveNest app." },
+            { role: "user", content: userMessage }
+          ]
+        })
+      });
+
+      const data = await response.json();
+      const reply = data.choices?.[0]?.message?.content || "(No response)";
+      appendMessage("assistant", reply);
+    }
+  </script>
+</body>
+</html>
