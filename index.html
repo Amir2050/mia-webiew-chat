@@ -72,28 +72,58 @@
     }
 
     async function sendMessage(message) {
-      appendMessage("You", message, "user");
+  appendMessage("You", message, "user");
+  appendMessage("Mia", "Let me think about that...", "mia");
 
-      appendMessage("Mia", "Let me think about that...", "mia");
+  try {
+    const res = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${apiKey}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: "gpt-3.5-turbo",
+        messages: [
+          { role: "system", content: "You are Mia, an intelligent assistant for a car services app." },
+          { role: "user", content: message }
+        ]
+      })
+    });
 
-      const res = await fetch("https://api.openai.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${apiKey}`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          model: "gpt-3.5-turbo",
-          messages: [
-            { role: "system", content: "You are Mia, an intelligent assistant for a car services app." },
-            { role: "user", content: message }
-          ]
-        })
-      });
+    const data = await res.json();
+    console.log("Mia's raw response:", data);
 
-      const data = await res.json();
-      console.log("Mia's response:", data);
-      const reply = data.choices?.[0]?.message?.content || "Sorry, I couldn’t understand that.";
+    if (data.choices && data.choices[0] && data.choices[0].message) {
+      const reply = data.choices[0].message.content;
+      
+      // Remove thinking message
+      const thinking = document.querySelector(".mia:last-child");
+      if (thinking && thinking.textContent.includes("Let me think about that")) {
+        thinking.remove();
+      }
+
+      appendMessage("Mia", reply, "mia");
+    } else if (data.error) {
+      const errorMsg = data.error.message || "Something went wrong.";
+      alert("API Error: " + errorMsg);
+
+      const thinking = document.querySelector(".mia:last-child");
+      if (thinking) thinking.remove();
+
+      appendMessage("Mia", errorMsg, "mia");
+    }
+
+  } catch (error) {
+    console.error("Request failed:", error);
+    alert("Request failed. Check the console.");
+
+    const thinking = document.querySelector(".mia:last-child");
+    if (thinking) thinking.remove();
+
+    appendMessage("Mia", "There was a problem connecting to the server.", "mia");
+  }
+}
 
       // Remove placeholder
       const thinking = document.querySelector(".mia:last-child");
