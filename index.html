@@ -92,6 +92,7 @@
       });
 
       const data = await res.json();
+      console.log("Mia's response:", data);
       const reply = data.choices?.[0]?.message?.content || "Sorry, I couldn’t understand that.";
 
       // Remove placeholder
