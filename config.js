@@ -1,2 +1,0 @@
-// config.js
-const OPENAI_API_KEY = "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";
