@@ -1,25 +1,38 @@
-import { useEffect } from "react";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MIA | Search Terminal</title>
+  <script async src="https://cse.google.com/cse.js?cx=e39516e6f5cd949cf"></script>
+  <style>
+    body {
+      background-color: #0a0f1a;
+      font-family: 'Courier New', monospace;
+      color: #00ffff;
+      margin: 0;
+      padding: 0;
+    }
+    .search-container {
+      padding: 2rem;
+      max-width: 800px;
+      margin: auto;
+      background: #101720;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(0,255,255,0.3);
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="search-container">
+    <h1>🔍 MIA’s Intelligence Search</h1>
+    <div class="gcse-search"></div>
+  </div>
+</body>
+</html>
 
-export default function MiaSearch() {
-  useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "https://cse.google.com/cse.js?cx=e39516e6f5cd949cf";
-    script.async = true;
-    document.body.appendChild(script);
-  }, []);
-
-  return (
-    <div style={{
-      backgroundColor: "#0a0f1a",
-      padding: "2rem",
-      borderRadius: "20px",
-      boxShadow: "0 0 20px rgba(0,255,255,0.3)",
-      color: "#00ffff",
-      fontFamily: "monospace"
-    }}>
-      <h2>🔍 MIA’s Intelligence Search</h2>
-      <div className="gcse-search" />
-    </div>
-  );
-}
 
